@@ -19,7 +19,7 @@ public class App
             // }
 
             Thread.sleep(100);
-            server.printJournal();
+            server.renderJournal();
             // client1.sendFunction();
             // client1.sendFunction();
             // client1.sendFunction();
@@ -32,7 +32,7 @@ public class App
         
             serverThread.join();
              
-            server.printJournal();
+            server.renderJournal();
             System.exit(1);
         } catch (Exception e) {
             e.printStackTrace();

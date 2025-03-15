@@ -3,11 +3,11 @@ com/norwood/Server$ServerInfo.class
 com/norwood/Client.class
 com/norwood/Server$CommandExecutor.class
 com/norwood/Server.class
-com/norwood/communication/Command$CommandBuilder.class
 com/norwood/communication/CommandType.class
 com/norwood/Server$Journal$Record.class
 com/norwood/App.class
 com/norwood/Server$1.class
+com/norwood/communication/Fields.class
 com/norwood/communication/FunctionType.class
 com/norwood/Room.class
 com/norwood/Server$Journal.class

@@ -50,4 +50,4 @@ Cookie is sent to server with each request.
 If client is logged out he can login later and will be sent with a new cookie
 ___
 
-I like how my neovim kickstart config gradually loses amout of comments
+ like how my neovim kickstart config gradually loses amout of comments

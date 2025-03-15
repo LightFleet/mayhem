@@ -1,4 +1,5 @@
 /home/alice/projects/chatty/src/main/java/com/norwood/Server.java
+/home/alice/projects/chatty/src/main/java/com/norwood/communication/Fields.java
 /home/alice/projects/chatty/src/main/java/com/norwood/communication/CommandType.java
 /home/alice/projects/chatty/src/main/java/com/norwood/Room.java
 /home/alice/projects/chatty/src/main/java/com/norwood/App.java
