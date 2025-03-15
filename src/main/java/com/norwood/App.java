@@ -11,12 +11,12 @@ public class App
             Thread serverThread = new Thread(() -> server.run());
             serverThread.start();
  
-            Client client1 = createClient("Bob");
-            client1.sendFunction(CommandType.FUNCTION, FunctionType.CREATE_ROOM.toString());
-
-            for (int i = 0; i < 1000; i++) {
-                client1.sendMessage("Bob room 1", "Hi everyone " + i);
-            }
+            // Client client1 = createClient("Bob");
+            // client1.sendFunction(CommandType.FUNCTION, FunctionType.CREATE_ROOM.toString());
+            //
+            // for (int i = 0; i < 1000; i++) {
+            //     client1.sendMessage("Bob room 1", "Hi everyone " + i);
+            // }
 
             Thread.sleep(100);
             server.printJournal();

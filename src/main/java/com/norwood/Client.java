@@ -13,9 +13,10 @@ import com.norwood.communication.FunctionType;
 
 public class Client 
 {
+    private boolean running = true;
     private String name;
     private Socket socket;
-    private BlockingQueue<Command> commands = new LinkedBlockingQueue<>();
+    private BlockingQueue<String> commands = new LinkedBlockingQueue<>();
     private PrintWriter out;
     private BufferedReader reader;
 
@@ -38,7 +39,7 @@ public class Client
             this.out = out;
             // sendRegistration();
 
-            while (true) {
+            while (running) {
                 handleCommand(commands.take());
             }
         } catch (Exception e) {
@@ -47,23 +48,27 @@ public class Client
         } 
     }
 
-    private void handleCommand(Command command) {
-        this.out.println(command.toString());
+    private void handleCommand(String command) {
+        this.out.println(command);
     }
 
-    public void sendFunction(CommandType type, String content) {
-        sendCommand(type, content + "|" + name);
+    void stop() {
+        running = false;
     }
 
-    public void sendRegistration() {
-        sendCommand(CommandType.REGISTER, name);
-    }
+    // public void sendFunction(CommandType type, String content) {
+    //     sendCommand(type, content + "|" + name);
+    // }
+    //
+    // public void sendRegistration() {
+    //     sendCommand(CommandType.REGISTER, name);
+    // }
+    //
+    // public void sendMessage(String command) {
+    //     sendCommand(CommandType.MESSAGE, message + "|" + name + "|" + room);
+    // }
 
-    public void sendMessage(String room, String message) {
-        sendCommand(CommandType.MESSAGE, message + "|" + name + "|" + room);
-    }
-
-    public void sendCommand(CommandType type, String content) {
-        commands.add(Command.from(type + "|" + content));
+    public void sendCommand(String content) {
+        commands.add(content);
     }
 }
