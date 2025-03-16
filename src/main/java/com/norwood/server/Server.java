@@ -46,7 +46,6 @@ public class Server
         }
     }
 
-
     private void registerCallbacks() {
         executor.registerCallback(
             ServerCallbackType.SEND_MESSAGE,
@@ -66,10 +65,16 @@ public class Server
         ) {
             String message;
             while ((message = reader.readLine()) != null) {
+                if (message.isEmpty()) {
+                    throw new RuntimeException("Message is empty");
+                }
+
+                Server.journal.addServerRecord("Parsing command...");
                 Map<String, String> fields = Command.parse(message);
                 String type = fields.get(Fields.type);
 
                 if (CommandType.REGISTER.toString().equals(type)) {
+                    Server.journal.addServerRecord("Trying to register new user.");
                     serverActions.tryToRegister(message, socket);
                     continue;
                 } 
@@ -78,8 +83,7 @@ public class Server
                 // after each client command process ALL server commands
             }
         } catch (Exception e) {
-            Server.journal.addServerRecord("Error while reading or writing from a socket.");
-            Server.journal.addServerRecord(e.getMessage());
+            Server.journal.addServerRecord("Error while reading or writing from a socket: " + e.getMessage());
         } finally {
         }
     }
