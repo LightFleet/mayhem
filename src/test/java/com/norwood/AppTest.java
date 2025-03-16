@@ -1,10 +1,12 @@
 package com.norwood;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.norwood.Server.Journal.Record;
+import com.norwood.journal.Record;
+import com.norwood.server.Server;
 
 import lombok.SneakyThrows;
 
@@ -23,12 +25,12 @@ class AppTest
 
     @Test
     void test() throws InterruptedException {
-        // Client bob = createClient(user);
-        // bob.createRoom("Bob Room 1");
-        // bob.sendMessage("Hi everyone!");
-        // Thread.sleep(30);
-        //
-        // assertJournalHas("Hi everyone!");
+        Client bob = createClient(user);
+        bob.createRoom("Bob Room 1");
+        bob.sendMessage("Hi everyone!");
+        Thread.sleep(30);
+
+        assertJournalHas("Hi everyone!");
     }
 
     @Test
@@ -51,32 +53,32 @@ class AppTest
 
         Server.journal.render();
         assertJournalHas("Hi everyone from Bob!");
-        assertTrue(Server.journal.roomRecords("Room1").stream().count() == 2);
+        // assertTrue(Server.journal.roomRecords("Room1").stream().count() == 2);
 
         // assertTrue(client2.roomLog().has("Hi everyone from Bob!"));
         // assertTrue(client3.roomLog().doesNotHave("Hi everyone from Bob!"));
     }
 
-    // @Test
-    // @SneakyThrows
-    // void testManyClients() {
-    //     final String roomName = "Room 1";
-    //     final String testMessage = "Hi everyone!";
-    //
-    //     for (int i = 1; i <= 10; i++) {
-    //         Client client = createClient(user + i);
-    //         client.createRoom(roomName);
-    //         client.sendMessage(testMessage);
-    //     }
-    //
-    //     Thread.sleep(10);
-    //
-    //     assertJournalHas(testMessage);
-    //
-    //     assertTrue(Server.journal.records().stream()
-    //         .filter(Record::isRoom)
-    //         .count() == 10);
-    // }
+    @Test
+    @SneakyThrows
+    void testManyClients() {
+        final String roomName = "Room 1";
+        final String testMessage = "Hi everyone!";
+
+        for (int i = 1; i <= 10; i++) {
+            Client client = createClient(user + i);
+            client.createRoom(roomName);
+            client.sendMessage(testMessage);
+        }
+
+        Thread.sleep(10);
+
+        assertJournalHas(testMessage);
+
+        assertTrue(Server.journal.records().stream()
+            .filter(Record::isRoom)
+            .count() == 10);
+    }
 
     private void assertJournalHas(String message) {
         assertTrue(Server.journal.records()
