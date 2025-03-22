@@ -55,17 +55,17 @@ class CommandExecutor
     }
 
     private void roomLog(Map<String, String> fields) {
-        String userName = fields.get(Fields.user);
-        String content = fields.get(Fields.message);
-        System.out.println("Content " + content);
-
-        sendMessageToClient(userName, content);
+        sendMessageToClient(
+            fields.get(Fields.user), 
+            fields.get(Fields.message)
+        );
     }
 
     @SuppressWarnings("unchecked")
     private void sendMessageToClient(String userName, String content) {
-        ((BiConsumer<String, String>) serverCallbacks.get(ServerCallbackType.SEND_MESSAGE))
-        .accept(userName, content);
+        ((BiConsumer<String, String>) serverCallbacks
+            .get(ServerCallbackType.SEND_MESSAGE))
+            .accept(userName, content);
     }
 
     private void handleMessage(Map<String, String> fields) {

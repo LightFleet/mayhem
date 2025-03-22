@@ -23,6 +23,15 @@ class AppTest
         Server.journal.clear();
     }
 
+    // @Test
+    // void test() throws InterruptedException {
+    //     Client bob = createClient(user);
+    //     bob.createRoom("Bob Room 1");
+    //     bob.sendMessage("Hi everyone!");
+    //     Thread.sleep(30);
+    //
+    //     assertJournalHas("Hi everyone!");
+    // }
     @Test
     void test() throws InterruptedException {
         Client bob = createClient(user);
@@ -35,7 +44,7 @@ class AppTest
 
     @Test
     @SneakyThrows
-    void testJoinRoom() {
+    void testJoinRoom() throws InterruptedException {
         // When client joins room he receives messages log of this room. Other clients don't.
         Client client1 = createClient("Bob");
         Client client2 = createClient("Alice");
@@ -45,6 +54,7 @@ class AppTest
         client2.createRoom("Room2");
         client3.createRoom("Room3");
 
+        // Client auto connected to room that he created.
         client1.sendMessage("Hi everyone from Bob!");
         client2.joinRoom("Room1");
         client2.sendMessage("Hi Bob!");
@@ -61,7 +71,7 @@ class AppTest
 
     @Test
     @SneakyThrows
-    void testManyClients() {
+    void testManyClients() throws InterruptedException {
         final String roomName = "Room 1";
         final String testMessage = "Hi everyone!";
 
