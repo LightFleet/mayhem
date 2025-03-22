@@ -14,6 +14,7 @@ import com.norwood.communication.Command;
 import com.norwood.communication.CommandType;
 import com.norwood.communication.Fields;
 import com.norwood.communication.FunctionType;
+import com.norwood.journal.Record;
 
 class CommandExecutor 
 {
@@ -46,9 +47,6 @@ class CommandExecutor
             case MESSAGE -> handleMessage(fields);
             case ROOM_LIST -> roomList(fields);
             case FUNCTION -> function(fields);
-
-            // S2C
-            case ROOM_LOG -> roomLog(fields);
             default -> {
                 Server.journal.addServerRecord("Unknown command. How did it happen? Command: " + type);
             }
@@ -56,17 +54,15 @@ class CommandExecutor
     }
 
     private void roomList(Map<String, String> fields) {
-        sendMessageToClient(
-            fields.get(Fields.user), 
-            "Room list: 1,2,3"
-        );
-    }
+        if (serverInfo.rooms.isEmpty()) {
+            sendMessageToClient(fields.get(Fields.user), "No rooms available");
+        }
 
-    private void roomLog(Map<String, String> fields) {
-        sendMessageToClient(
-            fields.get(Fields.user), 
-            fields.get(Fields.message)
-        );
+        String roomsList = serverInfo.rooms.stream()
+                .map(Room::getName)
+                .collect(Collectors.joining(", "));
+
+        sendMessageToClient(fields.get(Fields.user), Command.roomsList(roomsList));
     }
 
     @SuppressWarnings("unchecked")
@@ -93,24 +89,21 @@ class CommandExecutor
         }
     }
 
-    public void executeServerCommands() throws InterruptedException {
-        while (!commands.isEmpty()) {
-            execute(commands.take());
-        }
-    }
-
     private void joinRoom(String user, String name) {
         Room room = serverInfo.rooms.stream()
             .filter(r -> r.getName().equals(name))
             .findFirst().orElseThrow();
         
         room.addUser(user);
-        commands.add(Command.roomLog(
-            user,
-            Server.journal.roomRecords(name).stream()
+        String roomLog = Server.journal.roomRecords(name).stream()
                 .map(Record::toString)
-                .collect(Collectors.joining())
-        ));
+                .collect(Collectors.joining("|"));
+
+
+        Server.journal.addServerRecord("Sending room '" + room.getName() + "' log to " + user);
+        Server.journal.addServerRecord("Room log: " + roomLog);
+
+        sendMessageToClient(user, Command.roomLog(roomLog));
     }
 
     private void createRoom(String user, String name) {

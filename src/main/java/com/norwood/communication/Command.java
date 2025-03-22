@@ -44,11 +44,17 @@ public final class Command
     // ---- END CLIENT TO SERVER COMMANDS -----
     
     // ---- SERVER TO CLIENT COMMANDS -----
-    public static String roomLog(String user, String message) {
+    public static String roomsList(String roomsList) {
         return Command.from(Map.of(
-            Fields.type, CommandType.ROOM_LOG.toString(),
-            Fields.user, user,
-            Fields.message, message
+            Fields.type, CommandType.SROOMS.toString(),
+            Fields.message, roomsList 
+        ));
+    } 
+
+    public static String roomLog(String roomLog) {
+        return Command.from(Map.of(
+            Fields.type, CommandType.SMESSAGE.toString(),
+            Fields.message, roomLog
         ));
     } 
     // ---- ENDSERVER TO CLIENT COMMANDS -----

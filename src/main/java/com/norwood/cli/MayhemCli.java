@@ -13,6 +13,9 @@ public class MayhemCli {
         setupClient();
         renderControls();
         mainLoop();
+
+        System.out.println("Stopping client..");
+        System.exit(0); 
     }
 
     private void setupClient() {
@@ -27,14 +30,20 @@ public class MayhemCli {
 
             switch (parseCommand()) {
                 case JOIN_ROOM:
-                    commandExecutor.joinRoom();
+                    System.out.print("Enter room name: ");
+                    String roomName = sc.nextLine();
+                    System.out.println("Entering room " + roomName);
+                    commandExecutor.joinRoom(roomName);
+                    break;
+                case LIST_ROOMS:
+                    commandExecutor.requestRoomsList();
                     break;
                 case EXIT:
                     System.out.println("Bye-bye!");
                     break outer;
                 case INVALID:
                     System.out.println("Invalid control option.");
-                    continue;
+                    break;
                 default:
                     System.out.println("Unreacheable");
                     continue;
@@ -44,18 +53,23 @@ public class MayhemCli {
 
     private Option parseCommand() {
         try {
-            return Option.from(sc.nextInt());
+            return Option.from(Integer.parseInt(sc.nextLine()));
         } catch (Exception e) {
             return Option.INVALID;
         }
     }
 
-    private void renderControls() {
+    public static void clear() {
         System.out.print("\033[H\033[2J");
+    } 
+
+    private void renderControls() {
+        clear();
         System.out.println("--- Welcome to Mayhem ---");
         System.out.println();
         System.out.println("Enter command:");
         System.out.println("1) Join room");
+        System.out.println("2) List rooms");
         System.out.println("3) Exit");
         System.out.println();
     }

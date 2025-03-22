@@ -6,7 +6,7 @@ public enum CommandType
     MESSAGE, REGISTER, FUNCTION,
     ROOM_LIST,
     // S2C
-    ROOM_LOG
+    SMESSAGE, SROOMS
     ;
 
     public static CommandType from(String type) {
@@ -18,7 +18,8 @@ public enum CommandType
             case "room_list" -> CommandType.ROOM_LIST;
 
             // S2C
-            case "room_log" -> CommandType.ROOM_LOG;
+            case "smessage" -> CommandType.SMESSAGE;
+            case "srooms" -> CommandType.SROOMS;
             default -> throw new RuntimeException("No enum of type: " + type);
         };
     }

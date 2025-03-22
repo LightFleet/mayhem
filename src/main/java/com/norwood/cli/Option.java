@@ -2,8 +2,8 @@ package com.norwood.cli;
 
 enum Option {
     INVALID(-1),
-    // LIST_ROOMS,
     JOIN_ROOM(1),
+    LIST_ROOMS(2),
     // SEND_DM,
     EXIT(3);
 

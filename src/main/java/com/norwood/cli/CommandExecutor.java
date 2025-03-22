@@ -6,9 +6,12 @@ public class CommandExecutor {
 
     private Client client;
 
-    public void joinRoom() {
+    public void requestRoomsList() {
         client.requestRoomsList();
-        // client.joinRoom(roomName);
+    }
+
+    public void joinRoom(String roomName) {
+        client.joinRoom(roomName);
     }
 
     public void setClient(Client client) {

@@ -69,22 +69,21 @@ public class Server
                     throw new RuntimeException("Message is empty");
                 }
 
-                Server.journal.addServerRecord("Parsing command...");
-                Map<String, String> fields = Command.parse(message);
-                String type = fields.get(Fields.type);
-
-                if (CommandType.REGISTER.toString().equals(type)) {
+                if (isRegister(message)) {
                     Server.journal.addServerRecord("Trying to register new user.");
                     serverActions.tryToRegister(message, socket);
                     continue;
                 } 
                 executor.execute(message);
-
-                // after each client command process ALL server commands
             }
         } catch (Exception e) {
             Server.journal.addServerRecord("Error while reading or writing from a socket: " + e.getMessage());
         } finally {
         }
+    }
+
+    private boolean isRegister(String message) {
+        String type = Command.parse(message).get(Fields.type);
+        return CommandType.REGISTER.toString().equals(type);
     }
 }
