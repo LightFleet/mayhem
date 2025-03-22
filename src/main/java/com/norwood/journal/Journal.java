@@ -30,6 +30,7 @@ public class Journal
     }
     
     private void addRecord(Record record) {
+        System.out.println(record.toString());
         records().add(record);
     }
 
@@ -50,17 +51,17 @@ public class Journal
     }
 
     public void addRoomRecord(String user, String context, String content) {
-        String timestamp = LocalDateTime.now().format(
-            DateTimeFormatter.ofPattern("MM/dd/yyyy/HH:ss:SSS")
-        );
-        addRecord(new Record(timestamp, user, context, content));
+        addRecord(new Record(now(), user, context, content));
     }
 
     public void addServerRecord(String content) {
-        String timestamp = LocalDateTime.now().format(
+        addRecord(new Record(now(), "Server", "Server", content));
+    }
+
+    private String now() {
+        return LocalDateTime.now().format(
             DateTimeFormatter.ofPattern("MM/dd/yyyy/HH:ss:SSS")
         );
-        addRecord(new Record(timestamp, "Server", "Server", content));
     }
 
     public void clear() {

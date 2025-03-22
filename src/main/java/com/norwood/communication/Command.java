@@ -62,6 +62,7 @@ public final class Command
         return content.toString();
     }
 
+    // Key-value parsing, command-agnostic
     public static Map<String, String> parse(String command) {
         Map<String, String> fields = new HashMap<>();
          
@@ -78,9 +79,19 @@ public final class Command
     public String toString() {
         return content;
     }
-    
+
     public String print() {
         return "Command [content=" + content + "]";
     }
 
+    public static String requestRoomsList(String user) {
+        return basic(CommandType.ROOM_LIST, user);
+    }
+
+    public static String basic(CommandType type, String user) {
+        return Command.from(Map.of(
+            Fields.user, user,
+            Fields.type, type.toString()
+        ));
+    }
 }

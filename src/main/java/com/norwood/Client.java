@@ -103,4 +103,8 @@ public class Client
         }
         commands.add(content);
     }
+
+    public void requestRoomsList() {
+        sendCommand(Command.requestRoomsList(userName));
+    }
 }

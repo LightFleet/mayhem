@@ -2,58 +2,51 @@ package com.norwood.cli;
 
 import java.util.Scanner;
 
+import com.norwood.Client;
+
 public class MayhemCli {
-    enum Option {
-        // LIST_ROOMS,
-        JOIN_ROOM(1),
-        // SEND_DM,
-        EXIT(3);
-
-        private final int code;
-
-        Option(int code) {
-            this.code = code;
-        }
-
-        public int getCode() {
-            return code;
-        }
-        static Option from(int nextInt) {
-            for (Option opt : Option.values()) {
-                if (opt.getCode() == nextInt) {
-                    return opt;
-                }
-            }
-            throw new IllegalArgumentException("Invalid code: " + nextInt);
-        }
-    }
-
     Scanner sc = new Scanner(System.in);
+    CommandExecutor commandExecutor = new CommandExecutor();
+    private Client client;
 
     public void run() {
+        setupClient();
         renderControls();
+        mainLoop();
+    }
+
+    private void setupClient() {
+        this.client = new Client("Alisa");
+        client.run();
+        commandExecutor.setClient(client);
+    }
+
+    private void mainLoop() {
         outer: while (true) {
-            // clean();
             System.out.print(">:");
 
-            Option input;
-            try {
-                input = Option.from(sc.nextInt());
-            } catch (Exception e) {
-                System.out.println("Invalid control option.");
-                continue;
-            }
-
-            switch (input) {
+            switch (parseCommand()) {
                 case JOIN_ROOM:
-                    System.out.println("lalala");
+                    commandExecutor.joinRoom();
                     break;
                 case EXIT:
                     System.out.println("Bye-bye!");
                     break outer;
+                case INVALID:
+                    System.out.println("Invalid control option.");
+                    continue;
                 default:
-                    break outer;
+                    System.out.println("Unreacheable");
+                    continue;
             }
+        }
+    }
+
+    private Option parseCommand() {
+        try {
+            return Option.from(sc.nextInt());
+        } catch (Exception e) {
+            return Option.INVALID;
         }
     }
 

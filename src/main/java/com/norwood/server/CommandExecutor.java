@@ -44,6 +44,7 @@ class CommandExecutor
         switch (type) {
             // C2S
             case MESSAGE -> handleMessage(fields);
+            case ROOM_LIST -> roomList(fields);
             case FUNCTION -> function(fields);
 
             // S2C
@@ -52,6 +53,13 @@ class CommandExecutor
                 Server.journal.addServerRecord("Unknown command. How did it happen? Command: " + type);
             }
         }
+    }
+
+    private void roomList(Map<String, String> fields) {
+        sendMessageToClient(
+            fields.get(Fields.user), 
+            "Room list: 1,2,3"
+        );
     }
 
     private void roomLog(Map<String, String> fields) {
