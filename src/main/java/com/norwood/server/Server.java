@@ -11,10 +11,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import com.norwood.communication.Command;
-import com.norwood.communication.CommandType;
-import com.norwood.communication.Fields;
 import com.norwood.journal.Journal;
+import com.norwood.server.Command.CommandType;
+import com.norwood.server.Command.Fields;
 import com.norwood.server.CommandExecutor.ServerCallbackType;
 
 public class Server
@@ -83,7 +82,7 @@ public class Server
     }
 
     private boolean isRegister(String message) {
-        String type = Command.parse(message).get(Fields.type);
+        String type = CommandFactory.parse(message).get(Fields.type);
         return CommandType.REGISTER.toString().equals(type);
     }
 }

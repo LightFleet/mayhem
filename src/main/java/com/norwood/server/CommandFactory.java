@@ -1,14 +1,14 @@
-package com.norwood.communication;
+package com.norwood.server;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class Command 
+import com.norwood.server.Command.CommandType;
+import com.norwood.server.Command.Fields;
+import com.norwood.server.Command.FunctionType;
+
+public final class CommandFactory 
 {
-    public String content;
-
-    // ---- CLIENT TO SERVER COMMANDS -----
-
     public static String message(String user, String message, String room) {
         return Command.from(Map.of(
             Fields.type, CommandType.MESSAGE.toString(),
@@ -41,9 +41,7 @@ public final class Command
             Fields.user, user
         ));
     } 
-    // ---- END CLIENT TO SERVER COMMANDS -----
-    
-    // ---- SERVER TO CLIENT COMMANDS -----
+
     public static String roomsList(String roomsList) {
         return Command.from(Map.of(
             Fields.type, CommandType.SROOMS.toString(),
@@ -57,7 +55,6 @@ public final class Command
             Fields.message, roomLog
         ));
     } 
-    // ---- ENDSERVER TO CLIENT COMMANDS -----
 
     public static String from(Map<String, String> fields) {
         StringBuilder content = new StringBuilder();
@@ -79,15 +76,6 @@ public final class Command
         }
 
         return fields;
-    }
-
-    @Override
-    public String toString() {
-        return content;
-    }
-
-    public String print() {
-        return "Command [content=" + content + "]";
     }
 
     public static String requestRoomsList(String user) {

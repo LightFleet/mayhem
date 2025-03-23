@@ -10,11 +10,10 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import com.norwood.Room;
-import com.norwood.communication.Command;
-import com.norwood.communication.CommandType;
-import com.norwood.communication.Fields;
-import com.norwood.communication.FunctionType;
 import com.norwood.journal.Record;
+import com.norwood.server.Command.CommandType;
+import com.norwood.server.Command.Fields;
+import com.norwood.server.Command.FunctionType;
 
 class CommandExecutor 
 {
@@ -38,7 +37,7 @@ class CommandExecutor
     }
 
     public void execute(String message) {
-        Map<String, String> fields = Command.parse(message);
+        Map<String, String> fields = CommandFactory.parse(message);
 
         CommandType type = CommandType.from(fields.get("type"));
 
@@ -62,7 +61,7 @@ class CommandExecutor
                 .map(Room::getName)
                 .collect(Collectors.joining(", "));
 
-        sendMessageToClient(fields.get(Fields.user), Command.roomsList(roomsList));
+        sendMessageToClient(fields.get(Fields.user), CommandFactory.roomsList(roomsList));
     }
 
     @SuppressWarnings("unchecked")
@@ -103,7 +102,7 @@ class CommandExecutor
         Server.journal.addServerRecord("Sending room '" + room.getName() + "' log to " + user);
         Server.journal.addServerRecord("Room log: " + roomLog);
 
-        sendMessageToClient(user, Command.roomLog(roomLog));
+        sendMessageToClient(user, CommandFactory.roomLog(roomLog));
     }
 
     private void createRoom(String user, String name) {

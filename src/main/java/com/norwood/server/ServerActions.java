@@ -8,9 +8,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.norwood.communication.Command;
-import com.norwood.communication.CommandType;
-import com.norwood.communication.Fields;
+import com.norwood.server.Command.CommandType;
+import com.norwood.server.Command.Fields;
 
 class ServerActions
 {
@@ -25,7 +24,7 @@ class ServerActions
     }
 
     void tryToRegister(String message, Socket socket) throws InterruptedException {
-        Map<String, String> fields = Command.parse(message);
+        Map<String, String> fields = CommandFactory.parse(message);
         String user = fields.get(Fields.user);
 
         if (serverInfo.knownUsers.contains(user)) {

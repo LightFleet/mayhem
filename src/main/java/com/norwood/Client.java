@@ -10,9 +10,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.norwood.cli.MayhemCli;
-import com.norwood.communication.Command;
-import com.norwood.communication.CommandType;
-import com.norwood.communication.Fields;
+import com.norwood.server.Command;
+import com.norwood.server.Command.CommandType;
+import com.norwood.server.Command.Fields;
+import com.norwood.server.CommandFactory;
 
 public class Client 
 {
@@ -72,7 +73,7 @@ public class Client
             if (message == null) {
                 return;
             }
-            Map<String, String> fields =  Command.parse(message);
+            Map<String, String> fields =  CommandFactory.parse(message);
             switch (CommandType.from(fields.get(Fields.type))) {
                 case SROOMS:
                     System.out.println("Available rooms: " + fields.get(Fields.message));
@@ -108,28 +109,28 @@ public class Client
     }
 
     public void sendMessage(String message) {
-        sendCommand(Command.message(userName, message, currentRoom));
+        sendCommand(CommandFactory.message(userName, message, currentRoom));
     }
  
     public void joinRoom(String roomName) {
-        sendCommand(Command.joinRoom(userName, roomName));
+        sendCommand(CommandFactory.joinRoom(userName, roomName));
         currentRoom = roomName; // what if something goes wrong? No such room?
     }
 
     public void createRoom(String roomName) {
-        sendCommand(Command.createRoom(userName, roomName));
+        sendCommand(CommandFactory.createRoom(userName, roomName));
         currentRoom = roomName;
     }
 
     public void sendCommand(String content) {
         if (!registered) {
-            commands.add(Command.register(userName));
+            commands.add(CommandFactory.register(userName));
             registered = true;
         }
         commands.add(content);
     }
 
     public void requestRoomsList() {
-        sendCommand(Command.requestRoomsList(userName));
+        sendCommand(CommandFactory.requestRoomsList(userName));
     }
 }
