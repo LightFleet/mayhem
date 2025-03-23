@@ -5,8 +5,33 @@ import java.util.Scanner;
 import com.norwood.Client;
 
 public class MayhemCli {
+    enum Option {
+        INVALID(-1),
+        JOIN_ROOM(1),
+        LIST_ROOMS(2),
+        EXIT(3);
+
+        private final int code;
+
+        Option(int code) {
+            this.code = code;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        static Option from(int nextInt) {
+            for (Option opt : Option.values()) {
+                if (opt.getCode() == nextInt) {
+                    return opt;
+                }
+            }
+            throw new IllegalArgumentException("Invalid code: " + nextInt);
+        }
+    }
+
     Scanner sc = new Scanner(System.in);
-    CommandExecutor commandExecutor = new CommandExecutor();
     private Client client;
 
     public void run() {
@@ -21,7 +46,6 @@ public class MayhemCli {
     private void setupClient() {
         this.client = new Client("Alisa");
         client.run();
-        commandExecutor.setClient(client);
     }
 
     private void mainLoop() {
@@ -30,13 +54,10 @@ public class MayhemCli {
 
             switch (parseCommand()) {
                 case JOIN_ROOM:
-                    System.out.print("Enter room name: ");
-                    String roomName = sc.nextLine();
-                    System.out.println("Entering room " + roomName);
-                    commandExecutor.joinRoom(roomName);
+                    client.joinRoom(sc.nextLine());
                     break;
                 case LIST_ROOMS:
-                    commandExecutor.requestRoomsList();
+                    client.requestRoomsList();
                     break;
                 case EXIT:
                     System.out.println("Bye-bye!");
