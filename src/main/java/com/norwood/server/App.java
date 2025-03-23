@@ -7,8 +7,8 @@ public class App {
     public static void main(String[] args) {
         run();
 
-        System.out.println("Spawning Bob.");
-        Client bob = createClient("Bob");
+        Client bob = spawnBob("Bob");
+
         bob.createRoom("bobr");
         bob.sendMessage("Hi everyone!");
     }
@@ -20,7 +20,8 @@ public class App {
         System.out.println("Started server.");
     }
 
-    private static Client createClient(String name) {
+    private static Client spawnBob(String name) {
+        System.out.println("Spawning Bob.");
         Client client = new Client(name);
         client.run();
         return client;
