@@ -11,14 +11,11 @@ import java.util.stream.Collectors;
 
 import com.norwood.Room;
 import com.norwood.journal.Record;
-import com.norwood.server.Command.CommandType;
 import com.norwood.server.Command.Fields;
-import com.norwood.server.Command.FunctionType;
 
 class CommandExecutor 
 {
     Map<ServerCallbackType, Object> serverCallbacks = new HashMap<>();
-    private BlockingQueue<String> commands = new LinkedBlockingQueue<>();
     private static ServerInfo serverInfo = new ServerInfo();
 
     public enum ServerCallbackType {
@@ -39,20 +36,16 @@ class CommandExecutor
     public void execute(String message) {
         Map<String, String> fields = CommandFactory.parse(message);
 
-        CommandType type = CommandType.from(fields.get("type"));
+        Command type = Command.from(fields.get("type"));
 
-        switch (type) {
-            // C2S
-            case MESSAGE -> handleMessage(fields);
-            case ROOM_LIST -> roomList(fields);
-            case FUNCTION -> function(fields);
-            default -> {
-                Server.journal.addServerRecord("Unknown command. How did it happen? Command: " + type);
-            }
-        }
+        type.execute(this, message);
     }
 
-    private void roomList(Map<String, String> fields) {
+    void noAction(Map<String, String> fields) {
+        // Nothing
+    }
+
+    void roomList(Map<String, String> fields) {
         if (serverInfo.rooms.isEmpty()) {
             sendMessageToClient(fields.get(Fields.user), "No rooms available");
         }
@@ -65,13 +58,13 @@ class CommandExecutor
     }
 
     @SuppressWarnings("unchecked")
-    private void sendMessageToClient(String userName, String content) {
+    void sendMessageToClient(String userName, String content) {
         ((BiConsumer<String, String>) serverCallbacks
             .get(ServerCallbackType.SEND_MESSAGE))
             .accept(userName, content);
     }
 
-    private void handleMessage(Map<String, String> fields) {
+    void handleMessage(Map<String, String> fields) {
         Server.journal.addRoomRecord(
             fields.get("user"), 
             fields.get("room"),
@@ -79,16 +72,9 @@ class CommandExecutor
         );
     }
 
-    private void function(Map<String, String> fields) {
-        FunctionType type = FunctionType.from(fields.get("function_type"));
-
-        switch (type) {
-            case CREATE_ROOM -> createRoom(fields.get(Fields.user), fields.get(Fields.room));
-            case JOIN_ROOM -> joinRoom(fields.get(Fields.user), fields.get(Fields.room));
-        }
-    }
-
-    private void joinRoom(String user, String name) {
+    void joinRoom(Map<String, String> fields) {
+        String name = fields.get(Fields.user);
+        String user = fields.get(Fields.room);
         Room room = serverInfo.rooms.stream()
             .filter(r -> r.getName().equals(name))
             .findFirst().orElseThrow();
@@ -105,7 +91,9 @@ class CommandExecutor
         sendMessageToClient(user, CommandFactory.roomLog(roomLog));
     }
 
-    private void createRoom(String user, String name) {
+    void createRoom(Map<String, String> fields) {
+        String name = fields.get(Fields.user);
+        String user = fields.get(Fields.room);
         Integer roomsByClient = serverInfo.roomsByClient.getOrDefault(user, 0);
         Server.journal.addServerRecord(user + " has created " + roomsByClient  + " rooms");
         if (roomsByClient >= ServerInfo.MAX_ROOMS_PER_CLIENT) {

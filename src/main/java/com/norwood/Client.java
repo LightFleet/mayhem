@@ -11,7 +11,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.norwood.cli.MayhemCli;
 import com.norwood.server.Command;
-import com.norwood.server.Command.CommandType;
 import com.norwood.server.Command.Fields;
 import com.norwood.server.CommandFactory;
 
@@ -74,7 +73,7 @@ public class Client
                 return;
             }
             Map<String, String> fields =  CommandFactory.parse(message);
-            switch (CommandType.from(fields.get(Fields.type))) {
+            switch (Command.from(fields.get(Fields.type))) {
                 case SROOMS:
                     System.out.println("Available rooms: " + fields.get(Fields.message));
                     break;

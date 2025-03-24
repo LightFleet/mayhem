@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.norwood.server.Command.CommandType;
 import com.norwood.server.Command.Fields;
 
 class ServerActions
@@ -28,11 +27,6 @@ class ServerActions
         String user = fields.get(Fields.user);
 
         if (serverInfo.knownUsers.contains(user)) {
-            return;
-        }
-
-        String commandType = CommandType.REGISTER.toString();
-        if (!fields.get(Fields.type).equals(commandType)) {
             return;
         }
 

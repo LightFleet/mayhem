@@ -1,9 +1,19 @@
 package com.norwood.server;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
-public final class Command 
+public enum Command 
 {
+    CREATE_ROOM(CommandExecutor::createRoom),
+    JOIN_ROOM(CommandExecutor::joinRoom),
+    MESSAGE(CommandExecutor::handleMessage),
+    REGISTER(CommandExecutor::handleMessage),
+    ROOM_LIST(CommandExecutor::roomList),
+    SROOMS(CommandExecutor::noAction),
+    SMESSAGE(CommandExecutor::noAction);
+
     public static class Fields
     {
         public static final String type = "type";
@@ -13,52 +23,29 @@ public final class Command
         public static final String functionType = "function_type";
     }
 
-    public enum FunctionType 
-    {
-        CREATE_ROOM, JOIN_ROOM;
-        
-        public static FunctionType from(String type) {
-            return switch (type) {
-                case "create_room" -> FunctionType.CREATE_ROOM;
-                case "join_room" -> FunctionType.JOIN_ROOM;
-                default -> throw new RuntimeException("No enum of type: " + type);
-            };
-        }
+    private static final Map<String, Command> toEnum = new HashMap<>();
+    private final BiConsumer<CommandExecutor, Map<String, String>> action;
 
-        @Override
-        public String toString() {
-            return name().toLowerCase(); 
+    static {
+        for (Command type : values()) {
+            toEnum.put(type.toString(), type);
         }
     }
+    
+    public static Command from(String type) {
+        return toEnum.get(type);
+    }
 
-    public enum CommandType 
-    {
-        // C2S
-        MESSAGE, REGISTER, FUNCTION,
-        ROOM_LIST,
-        // S2C
-        SMESSAGE, SROOMS
-        ;
+    Command (BiConsumer<CommandExecutor, Map<String, String>> action) {
+        this.action = action;
+    }
 
-        public static CommandType from(String type) {
-            return switch (type) {
-                // C2S
-                case "message" -> CommandType.MESSAGE;
-                case "register" -> CommandType.REGISTER;
-                case "function" -> CommandType.FUNCTION;
-                case "room_list" -> CommandType.ROOM_LIST;
+    public void execute(CommandExecutor executor, String message) {
+        action.accept(executor, fields(message));
+    }
 
-                // S2C
-                case "smessage" -> CommandType.SMESSAGE;
-                case "srooms" -> CommandType.SROOMS;
-                default -> throw new RuntimeException("No enum of type: " + type);
-            };
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase(); 
-        }
+    private static Map<String, String> fields(String message) {
+        return CommandFactory.parse(message);
     }
 
     public static String from(Map<String, String> fields) {
