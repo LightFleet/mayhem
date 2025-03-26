@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -34,11 +32,9 @@ class CommandExecutor
     }
 
     public void execute(String message) {
-        Map<String, String> fields = CommandFactory.parse(message);
 
-        Command type = Command.from(fields.get("type"));
-
-        type.execute(this, message);
+        Command command = Command.from(CommandFactory.parse(message).get("type"));
+        command.execute(this, message);
     }
 
     void noAction(Map<String, String> fields) {

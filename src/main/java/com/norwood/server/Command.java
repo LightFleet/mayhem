@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public enum Command 
+public enum Command
 {
     CREATE_ROOM(CommandExecutor::createRoom),
     JOIN_ROOM(CommandExecutor::joinRoom),
@@ -31,13 +31,13 @@ public enum Command
             toEnum.put(type.toString(), type);
         }
     }
-    
-    public static Command from(String type) {
-        return toEnum.get(type);
-    }
 
     Command (BiConsumer<CommandExecutor, Map<String, String>> action) {
         this.action = action;
+    }
+    
+    public static Command from(String type) {
+        return toEnum.get(type);
     }
 
     public void execute(CommandExecutor executor, String message) {

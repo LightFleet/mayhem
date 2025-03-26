@@ -50,4 +50,47 @@ Cookie is sent to server with each request.
 If client is logged out he can login later and will be sent with a new cookie
 ___
 
- like how my neovim kickstart config gradually loses amout of comments
+ <!-- like how my neovim kickstart config gradually loses amout of comments -->
+
+Project ideas:
+1) Networking module for chatty
+2) some kind of web/pdf crawler (something neat and specific)
+3) Something from this list:
+    1. ohpas onboarding pdf
+    2. ci/cd readiness task automation
+    3. Auditing mapper generators
+    4. Script to check if you have necessary infra for deployment to PAS Bundle
+    5. Tool to autocomplete checks in PR description in SCM
+    6. Integration testing framework for OHPAS?
+    7. lightweight sqlite database for local development and testing
+    8. 
+4) Shodan clone?
+5) Tower Defence Game
+6) Particle system; Shaders?
+7) JPEG
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
